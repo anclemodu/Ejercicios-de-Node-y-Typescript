@@ -1,0 +1,98 @@
+// Enumeración para los géneros de películas
+enum GeneroPelicula {
+    ACCION = "Acción",
+    AVENTURA = "Aventura",
+    COMEDIA = "Comedia",
+    DRAMA = "Drama",
+    TERROR = "Terror",
+    CIENCIA_FICCION = "Ciencia Ficción",
+    FANTASIA = "Fantasía",
+    ROMANCE = "Romance",
+    SUSPENSO = "Suspenso",
+    DOCUMENTAL = "Documental",
+    ANIMACION = "Animación",
+    MUSICAL = "Musical"
+}
+
+// Enumeración para los países
+enum Pais {
+    USA = "Estados Unidos",
+    MEXICO = "México",
+    ESPAÑA = "España",
+    ARGENTINA = "Argentina",
+    COLOMBIA = "Colombia",
+    FRANCIA = "Francia",
+    ITALIA = "Italia",
+    ALEMANIA = "Alemania",
+    REINO_UNIDO = "Reino Unido",
+    JAPON = "Japón",
+    COREA_DEL_SUR = "Corea del Sur",
+    INDIA = "India"
+}
+
+// Función para mostrar los géneros
+function mostrarGeneros(): void {
+    console.log("=== GÉNEROS DE PELÍCULAS ===");
+    for (const genero in GeneroPelicula) {
+        if (isNaN(Number(genero))) {
+            console.log(`- ${GeneroPelicula[genero as keyof typeof GeneroPelicula]}`);
+        }
+    }
+}
+
+// Función para mostrar los países
+function mostrarPaises(): void {
+    console.log("\n=== PAÍSES ===");
+    for (const pais in Pais) {
+        if (isNaN(Number(pais))) {
+            console.log(`- ${Pais[pais as keyof typeof Pais]}`);
+        }
+    }
+}
+
+// Función principal
+function main(): void {
+    mostrarGeneros();
+    mostrarPaises();
+    
+    // Ejemplo adicional: mostrar valores específicos
+    console.log("\n=== EJEMPLOS DE USO ===");
+    console.log(`Género favorito: ${GeneroPelicula.CIENCIA_FICCION}`);
+    console.log(`País de origen: ${Pais.JAPON}`);
+}
+
+// Ejecutar el programa
+main();
+
+=== GÉNEROS DE PELÍCULAS ===
+- Acción
+- Aventura
+- Comedia
+- Drama
+- Terror
+- Ciencia Ficción
+- Fantasía
+- Romance
+- Suspenso
+- Documental
+- Animación
+- Musical
+
+=== PAÍSES ===
+- Estados Unidos
+- México
+- España
+- Argentina
+- Colombia
+- Francia
+- Italia
+- Alemania
+- Reino Unido
+- Japón
+- Corea del Sur
+- India
+
+=== EJEMPLOS DE USO ===
+Género favorito: Ciencia Ficción
+País de origen: Japón
+
