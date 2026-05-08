@@ -1,0 +1,188 @@
+mi-app/
+├── app.js
+├── views/
+│   ├── pregunta.html
+│   └── respuesta.html
+└── package.json
+
+{
+  "name": "animal-favorito",
+  "version": "1.0.0",
+  "description": "Ejemplo de formulario con dos vistas",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  }
+}
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware para procesar datos de formularios
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Servir archivos estáticos (CSS, JS, imágenes opcionales)
+app.use(express.static('public'));
+
+// Ruta principal: muestra el formulario para preguntar el animal favorito
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'pregunta.html'));
+});
+
+// Ruta que intercepta el POST y muestra la respuesta
+app.post('/animal', (req, res) => {
+    const animalFavorito = req.body.animal;
+    
+    // Validación básica
+    if (!animalFavorito || animalFavorito.trim() === '') {
+        return res.send(`
+            <h1>Error</h1>
+            <p>Debes ingresar un animal válido.</p>
+            <a href="/">Volver</a>
+        `);
+    }
+    
+    // Enviar la vista respuesta.html como archivo estático,
+    // pero pasando el dato mediante res.locals no es posible.
+    // Una forma sencilla: leer el HTML y reemplazar un marcador.
+    const fs = require('fs');
+    let htmlRespuesta = fs.readFileSync(path.join(__dirname, 'views', 'respuesta.html'), 'utf8');
+    htmlRespuesta = htmlRespuesta.replace('{{animal}}', animalFavorito);
+    
+    res.send(htmlRespuesta);
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Cuál es tu animal favorito?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        label {
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 Descubre tu animal favorito</h1>
+        <form action="/animal" method="POST">
+            <label for="animal">Escribe el nombre de tu animal favorito:</label>
+            <input type="text" id="animal" name="animal" placeholder="Ej: Perro, Gato, Elefante..." required>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu animal favorito</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #e8f5e9;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #2e7d32;
+        }
+        .animal {
+            font-size: 3em;
+            color: #1b5e20;
+            background: #c8e6c9;
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Tu animal favorito es... ✨</h1>
+        <div class="animal">🐾 {{animal}} 🐾</div>
+        <br>
+        <button onclick="window.location.href='/'">Elegir otro animal</button>
+    </div>
+</body>
+</html>
+
